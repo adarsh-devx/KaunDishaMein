@@ -170,7 +170,7 @@ function toast(msg, ms = 2200) {
    --------------------------------------------------------- */
 function tickClock() {
   const d = new Date();
-  els.clock.textContent = d.toLocaleTimeString('hi-IN', { hour: '2-digit', minute: '2-digit' });
+  els.clock.textContent = d.toLocaleTimeString('hi-IN', { hour: 'numeric', minute: '2-digit', hour12: true }).toUpperCase();
 }
 setInterval(tickClock, 30000);
 tickClock();
@@ -406,7 +406,6 @@ els.horn.addEventListener('click', () => {
   els.logo.classList.remove('is-shaking');
   void els.logo.offsetWidth;
   els.logo.classList.add('is-shaking');
-  toast('🌊 लहर लहर! — समुंदर बुला रहा');
 });
 
 /* ---------------------------------------------------------
@@ -625,7 +624,7 @@ setTimeout(() => {
 /* ---------------------------------------------------------
    14. Bumper rotation + init
    --------------------------------------------------------- */
-els.bumperNext.addEventListener('click', () => { nextBumper(); toast('📜 ' + BUMPERS[(bumperIdx + BUMPERS.length) % BUMPERS.length]); });
+els.bumperNext.addEventListener('click', () => { nextBumper(); });
 setInterval(nextBumper, 7000);
 
 /* ---------------------------------------------------------

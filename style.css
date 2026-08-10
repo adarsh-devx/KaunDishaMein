@@ -463,11 +463,8 @@ main {
   opacity: 1; visibility: visible; transform: none;
   transition: opacity var(--glide), transform 420ms var(--ease-settle), visibility 0s;
 }
-.list { scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, 0.28) transparent; }
-.list::-webkit-scrollbar { width: 6px; }
-.list::-webkit-scrollbar-track { background: transparent; }
-.list::-webkit-scrollbar-thumb { border-radius: 999px; background: rgba(255, 255, 255, 0.24); }
-.list::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.4); }
+.list { scrollbar-width: none; }
+.list::-webkit-scrollbar { display: none; }
 
 .list ol { margin: 0; padding: 0.4rem; list-style: none; counter-reset: t; }
 .list li { counter-increment: t; }
