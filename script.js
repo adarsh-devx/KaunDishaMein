@@ -3,7 +3,7 @@
    Lahar OK Please jaisa samundar radio player • vanilla JS
    Comments Hinglish mein hain, chill padho ⚓
    ========================================================= */
-'use strict';
+"use strict";
 
 /* ---------------------------------------------------------
    1. GAANA LIST — do musafir, samundar ke gaane
@@ -12,12 +12,36 @@
    player chalta hai — bas silent placeholder bajega.
    --------------------------------------------------------- */
 const SONGS = [
-  { title: 'Kaun Disaa Mein Leke Chala Re Batohiya', movie: 'Nadiya Ke Paar (1982)',        file: 'song-batohiya.mp3' },
-  { title: 'Gori Tera Gaon Bada Pyara',             movie: 'Chitchor (1976)',              file: 'song-gori-tera-gaon.mp3' },
-  { title: 'Chalat Musafir Moh Liyo Re',            movie: 'Teesri Kasam (1966)',          file: 'song-chalat-musafir.mp3' },
-  { title: 'Aaye Ho Meri Zindagi Mein',             movie: 'Raja Hindustani (1996)',       file: 'song-aaye-ho-meri-zindagi.mp3' },
-  { title: 'Sujalpur Ki Pori',                      movie: 'Ganga Jamuna Saraswati (1988)', file: 'song-sujalpur-ki-pori.mp3' },
-  { title: 'Ek Radha Ek Meera',                     movie: 'Ram Teri Ganga Maili (1985)',  file: 'song-ek-radha-ek-meera.mp3' }
+  {
+    title: "Kaun Disaa Mein Leke Chala Re Batohiya",
+    movie: "Nadiya Ke Paar (1982)",
+    file: "song-batohiya.mp3",
+  },
+  {
+    title: "Gori Tera Gaon Bada Pyara",
+    movie: "Chitchor (1976)",
+    file: "song-gori-tera-gaon.mp3",
+  },
+  {
+    title: "Chalat Musafir Moh Liyo Re",
+    movie: "Teesri Kasam (1966)",
+    file: "song-chalat-musafir.mp3",
+  },
+  {
+    title: "Aaye Ho Meri Zindagi Mein",
+    movie: "Raja Hindustani (1996)",
+    file: "song-aaye-ho-meri-zindagi.mp3",
+  },
+  {
+    title: "Sujalpur Ki Pori",
+    movie: "Ganga Jamuna Saraswati (1988)",
+    file: "song-sujalpur-ki-pori.mp3",
+  },
+  {
+    title: "Ek Radha Ek Meera",
+    movie: "Ram Teri Ganga Maili (1985)",
+    file: "song-ek-radha-ek-meera.mp3",
+  },
 ];
 
 /* ---------------------------------------------------------
@@ -45,40 +69,40 @@ const SONGS = [
      C. Dono na ho → local assets/audio/ ke placeholders chalenge.
    --------------------------------------------------------- */
 const CONFIG = {
-  YT_API_KEY: '',
-  YT_PLAYLIST_ID: ''
+  YT_API_KEY: "",
+  YT_PLAYLIST_ID: "",
 };
 
 /* Final playlist — initSource() ke baad decide hoti hai */
 let TRACKS = [];
-let mode = 'local';      // 'local' | 'yt'
+let mode = "local"; // 'local' | 'yt'
 let yt = null;
 let ytReady = false;
 let ytLoadedId = null;
-let ytPendingPlay = false;   // YT player ready hone se pehle play dabaya tha? (onReady pe chala denge)
+let ytPendingPlay = false; // YT player ready hone se pehle play dabaya tha? (onReady pe chala denge)
 
 /* Bumper slogans — naav pe likhe line jaisi */
 const BUMPERS = [
-  'जो डूबे सो पार उतरे',
-  'दो यार, एक नाव, समुंदर भर के गाने',
-  'लहरें ओके प्लीज़ 🌊',
-  'Lahar aane do, safar chalte raho',
-  'नमक की हवा, दिल में गाना',
-  'समुंदर की सरहद पर मुसाफ़िर ⚓',
-  'लहर लहर! नाव ओके प्लीज़',
-  'डूबे तो खुल गए, तैरे तो आ गए'
+  "जो डूबे सो पार उतरे",
+  "दो यार, एक नाव, समुंदर भर के गाने",
+  "लहरें ओके प्लीज़ 🌊",
+  "Lahar aane do, safar chalte raho",
+  "नमक की हवा, दिल में गाना",
+  "समुंदर की सरहद पर मुसाफ़िर ⚓",
+  "लहर लहर! नाव ओके प्लीज़",
+  "डूबे तो खुल गए, तैरे तो आ गए",
 ];
 
 /* Player events ke chhote messages (toast + bumper flash) */
 const MSGS = {
-  ready:  'नाव तैयार! Gaana chalao ▶',
-  play:   'गाना शुरू! चलो समुंदर में ▶',
-  pause:  'रुको! पतवार थाम लो 🌊',
-  next:   'अगला गाना... अगली लहर!',
-  prev:   'पिछली लहर का गाना याद आया?',
-  shuffle:'शफ़ल! जैसे लहर का मन करे 🔀',
-  unshuf: 'शफ़ल बंद। अब सीधी नाव।',
-  error:  'गाना नहीं मिला! README देखो 🎵'
+  ready: "नाव तैयार! Gaana chalao ▶",
+  play: "गाना शुरू! चलो समुंदर में ▶",
+  pause: "रुको! पतवार थाम लो 🌊",
+  next: "अगला गाना... अगली लहर!",
+  prev: "पिछली लहर का गाना याद आया?",
+  shuffle: "शफ़ल! जैसे लहर का मन करे 🔀",
+  unshuf: "शफ़ल बंद। अब सीधी नाव।",
+  error: "गाना नहीं मिला! README देखो 🎵",
 };
 
 /* ---------------------------------------------------------
@@ -86,33 +110,49 @@ const MSGS = {
    --------------------------------------------------------- */
 const $ = (id) => document.getElementById(id);
 const els = {
-  intro: $('intro'), introEnter: $('introEnter'), introLoading: $('introLoading'),
-  clock: $('clock'), listeners: $('listeners'),
-  horn: $('horn'), logo: $('logo'),
-  player: $('player'), disc: $('disc'),
-  mqWrap: $('mqWrap'), titleText: $('titleText'), titleClone: $('titleClone'),
-  artist: $('artist'),
-  seek: $('seek'), seekFill: $('seekFill'), seekKnob: $('seekKnob'),
-  tCur: $('tCur'), tDur: $('tDur'),
+  intro: $("intro"),
+  introEnter: $("introEnter"),
+  introLoading: $("introLoading"),
+  clock: $("clock"),
+  listeners: $("listeners"),
+  horn: $("horn"),
+  logo: $("logo"),
+  player: $("player"),
+  disc: $("disc"),
+  mqWrap: $("mqWrap"),
+  titleText: $("titleText"),
+  titleClone: $("titleClone"),
+  artist: $("artist"),
+  seek: $("seek"),
+  seekFill: $("seekFill"),
+  seekKnob: $("seekKnob"),
+  tCur: $("tCur"),
+  tDur: $("tDur"),
   // muteBtn: $('muteBtn'), volRail: $('volRail'), volFill: $('volFill'),  // removed from UI
-  shuffle: $('shuffle'), prev: $('prev'), play: $('play'), next: $('next'), listBtn: $('listBtn'),
-  list: $('list'), listItems: $('listItems'),
-  bumperText: $('bumperText'), bumperNext: $('bumperNext'),
-  toast: $('toast')
+  shuffle: $("shuffle"),
+  prev: $("prev"),
+  play: $("play"),
+  next: $("next"),
+  listBtn: $("listBtn"),
+  list: $("list"),
+  listItems: $("listItems"),
+  bumperText: $("bumperText"),
+  bumperNext: $("bumperNext"),
+  toast: $("toast"),
 };
 
 /* ---------------------------------------------------------
    3. Player state + audio
    --------------------------------------------------------- */
 const audio = new Audio();
-audio.preload = 'auto';
+audio.preload = "auto";
 
 const state = {
   current: 0,
   playing: false,
   shuffled: false,
   volume: 0.7,
-  muted: false
+  muted: false,
 };
 
 /* ---------------------------------------------------------
@@ -122,17 +162,21 @@ function fmtTime(sec) {
   if (!isFinite(sec) || sec < 0) sec = 0;
   const m = Math.floor(sec / 60);
   const s = Math.floor(sec % 60);
-  return m + ':' + String(s).padStart(2, '0');
+  return m + ":" + String(s).padStart(2, "0");
 }
 
 /* title marquee — text set + lamba hon toh scroll */
 function setTitle(text) {
   els.titleText.textContent = text;
   els.titleClone.textContent = text;
-  els.mqWrap.style.setProperty('--mq-dur', Math.max(6, text.length * 0.18) + 's');
+  els.mqWrap.style.setProperty(
+    "--mq-dur",
+    Math.max(6, text.length * 0.18) + "s",
+  );
   requestAnimationFrame(() => {
-    const fits = els.titleText.scrollWidth <= els.mqWrap.parentElement.clientWidth;
-    els.mqWrap.classList.toggle('static', fits);
+    const fits =
+      els.titleText.scrollWidth <= els.mqWrap.parentElement.clientWidth;
+    els.mqWrap.classList.toggle("static", fits);
   });
 }
 
@@ -144,10 +188,10 @@ function flashBumper(msg, ms = 2400) {
   bumperTimer = setTimeout(nextBumper, ms);
 }
 function setBumper(text) {
-  els.bumperText.classList.add('is-swapping');
+  els.bumperText.classList.add("is-swapping");
   setTimeout(() => {
     els.bumperText.textContent = text;
-    els.bumperText.classList.remove('is-swapping');
+    els.bumperText.classList.remove("is-swapping");
   }, 240);
 }
 
@@ -160,9 +204,9 @@ function nextBumper() {
 let toastTimer = null;
 function toast(msg, ms = 2200) {
   els.toast.textContent = msg;
-  els.toast.classList.add('show');
+  els.toast.classList.add("show");
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => els.toast.classList.remove('show'), ms);
+  toastTimer = setTimeout(() => els.toast.classList.remove("show"), ms);
 }
 
 /* ---------------------------------------------------------
@@ -170,7 +214,13 @@ function toast(msg, ms = 2200) {
    --------------------------------------------------------- */
 function tickClock() {
   const d = new Date();
-  els.clock.textContent = d.toLocaleTimeString('hi-IN', { hour: 'numeric', minute: '2-digit', hour12: true }).toUpperCase();
+  els.clock.textContent = d
+    .toLocaleTimeString("hi-IN", {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    })
+    .toUpperCase();
 }
 setInterval(tickClock, 30000);
 tickClock();
@@ -189,41 +239,46 @@ tickClock();
    --------------------------------------------------------- */
 /* UI playing state — CSS icons + disc spin (is-playing class se) */
 function setUIPlaying(on) {
-  els.player.classList.toggle('is-playing', on);
+  els.player.classList.toggle("is-playing", on);
 }
 
 function loadSong(i) {
   state.current = (i + TRACKS.length) % TRACKS.length;
   const song = TRACKS[state.current];
-  els.tCur.textContent = '0:00';
-  els.tDur.textContent = '0:00';
+  els.tCur.textContent = "0:00";
+  els.tDur.textContent = "0:00";
   setSeek(0, 0);
   setTitle(song.title);
   els.artist.textContent = song.artist;
-  if (mode === 'yt') {
+  if (mode === "yt") {
     ytLoadedId = null;
     // YouTube thumbnail disc mein set karo
-    const thumbUrl = 'https://i.ytimg.com/vi/' + song.videoId + '/mqdefault.jpg';
-    let img = els.disc.querySelector('.disc__thumb');
+    const thumbUrl =
+      "https://i.ytimg.com/vi/" + song.videoId + "/mqdefault.jpg";
+    let img = els.disc.querySelector(".disc__thumb");
     if (!img) {
-      img = document.createElement('img');
-      img.className = 'disc__thumb disc__art';
-      img.alt = '';
-      els.disc.querySelector('.disc__ring').appendChild(img);
+      img = document.createElement("img");
+      img.className = "disc__thumb disc__art";
+      img.alt = "";
+      els.disc.querySelector(".disc__ring").appendChild(img);
     }
     img.src = thumbUrl;
   } else {
-    audio.src = 'assets/audio/' + song.file;
+    audio.src = "assets/audio/" + song.file;
   }
   updateListUI();
-  rotateBg();   // artwork crossfade
+  rotateBg(); // artwork crossfade
 }
 
 function playSong() {
   flashBumper(MSGS.play, 1800);
-  if (mode === 'yt') {
+  if (mode === "yt") {
     // Player abhi ready nahi — yaad rakho, onReady pe khud chala denge
-    if (!ytReady) { ytPendingPlay = true; toast('📻 Radio boot ho raha hai... ek second'); return; }
+    if (!ytReady) {
+      ytPendingPlay = true;
+      toast("📻 Radio boot ho raha hai... ek second");
+      return;
+    }
     const id = TRACKS[state.current].videoId;
     if (ytLoadedId !== id) {
       ytLoadedId = id;
@@ -236,7 +291,8 @@ function playSong() {
     updateListUI();
     return;
   }
-  audio.play()
+  audio
+    .play()
     .then(() => {
       state.playing = true;
       setUIPlaying(true);
@@ -245,14 +301,15 @@ function playSong() {
     .catch(() => {
       state.playing = false;
       setUIPlaying(false);
-      toast('Browser ne gaana rok diya — dobara play dabao 🔊');
+      toast("Browser ne gaana rok diya — dobara play dabao 🔊");
     });
 }
 
 function pauseSong() {
-  ytPendingPlay = false;   // pending autoplay cancel
-  if (mode === 'yt') { if (yt) yt.pauseVideo(); }
-  else audio.pause();
+  ytPendingPlay = false; // pending autoplay cancel
+  if (mode === "yt") {
+    if (yt) yt.pauseVideo();
+  } else audio.pause();
   state.playing = false;
   setUIPlaying(false);
   flashBumper(MSGS.pause, 1800);
@@ -267,7 +324,9 @@ function togglePlay() {
 function nextSong() {
   let i = state.current + 1;
   if (state.shuffled) {
-    do { i = Math.floor(Math.random() * TRACKS.length); } while (i === state.current && TRACKS.length > 1);
+    do {
+      i = Math.floor(Math.random() * TRACKS.length);
+    } while (i === state.current && TRACKS.length > 1);
   }
   loadSong(i);
   flashBumper(MSGS.next, 1600);
@@ -282,46 +341,51 @@ function prevSong() {
 
 function toggleShuffle() {
   state.shuffled = !state.shuffled;
-  els.shuffle.classList.toggle('is-on', state.shuffled);
-  els.shuffle.setAttribute('aria-pressed', state.shuffled);
+  els.shuffle.classList.toggle("is-on", state.shuffled);
+  els.shuffle.setAttribute("aria-pressed", state.shuffled);
   flashBumper(state.shuffled ? MSGS.shuffle : MSGS.unshuf, 1800);
 }
 
 /* seek UI (scaleX fill + knob) */
 function setSeek(pct, durPct) {
-  els.seekFill.style.transform = 'scaleX(' + (pct / 100) + ')';
-  els.seekKnob.style.left = durPct + '%';
-  els.seek.setAttribute('aria-valuenow', Math.round(pct));
+  els.seekFill.style.transform = "scaleX(" + pct / 100 + ")";
+  els.seekKnob.style.left = durPct + "%";
+  els.seek.setAttribute("aria-valuenow", Math.round(pct));
 }
 
 /* audio events */
-audio.addEventListener('loadedmetadata', () => {
+audio.addEventListener("loadedmetadata", () => {
   els.tDur.textContent = fmtTime(audio.duration);
   const item = els.listItems.children[state.current];
-  if (item) item.querySelector('.t-dur').textContent = fmtTime(audio.duration);
+  if (item) item.querySelector(".t-dur").textContent = fmtTime(audio.duration);
 });
-audio.addEventListener('timeupdate', () => {
+audio.addEventListener("timeupdate", () => {
   if (!audio.duration) return;
   const pct = (audio.currentTime / audio.duration) * 100;
   setSeek(pct, pct);
   els.tCur.textContent = fmtTime(audio.currentTime);
 });
-audio.addEventListener('ended', () => {
+audio.addEventListener("ended", () => {
   state.playing = false;
   setUIPlaying(false);
   flashBumper(MSGS.pause, 1800);
 });
-audio.addEventListener('error', () => {
-  if (state.playing) { state.playing = false; els.player.classList.remove('is-playing'); }
+audio.addEventListener("error", () => {
+  if (state.playing) {
+    state.playing = false;
+    els.player.classList.remove("is-playing");
+  }
   flashBumper(MSGS.error, 3000);
-  toast('🎵 Gaana file nahi mili! README.md dekh ke apni naav ki playlist daalo.');
+  toast(
+    "🎵 Gaana file nahi mili! README.md dekh ke apni naav ki playlist daalo.",
+  );
 });
 
 /* buttons */
-els.play.addEventListener('click', togglePlay);
-els.next.addEventListener('click', nextSong);
-els.prev.addEventListener('click', prevSong);
-els.shuffle.addEventListener('click', toggleShuffle);
+els.play.addEventListener("click", togglePlay);
+els.next.addEventListener("click", nextSong);
+els.prev.addEventListener("click", prevSong);
+els.shuffle.addEventListener("click", toggleShuffle);
 
 /* keyboard: space = play, arrows = next/prev, l = lahar
    Space hamesha play/pause toggle karega (chahe kisi bhi button
@@ -331,13 +395,20 @@ els.shuffle.addEventListener('click', toggleShuffle);
    handlers hain (scrub/volume) — isliye unhe document-level se
    bahar rakhna padta hai, warna Arrow key se gaana bhi badal
    jata aur slider bhi chalta. */
-document.addEventListener('keydown', (e) => {
+document.addEventListener("keydown", (e) => {
   const t = e.target;
-  if (t instanceof Element && t.closest('input, textarea, [contenteditable="true"], [role="slider"]')) return;
-  if (e.code === 'Space') { e.preventDefault(); togglePlay(); }
-  if (e.code === 'ArrowRight') nextSong();
-  if (e.code === 'ArrowLeft') prevSong();
-  if (e.key === 'l' || e.key === 'L') soundGhungroo();
+  if (
+    t instanceof Element &&
+    t.closest('input, textarea, [contenteditable="true"], [role="slider"]')
+  )
+    return;
+  if (e.code === "Space") {
+    e.preventDefault();
+    togglePlay();
+  }
+  if (e.code === "ArrowRight") nextSong();
+  if (e.code === "ArrowLeft") prevSong();
+  if (e.key === "l" || e.key === "L") soundGhungroo();
 });
 
 /* ---------------------------------------------------------
@@ -349,24 +420,34 @@ function seekFromEvent(e) {
   return x / r.width;
 }
 function scrubTo(pct) {
-  const d = mode === 'yt' ? (yt && yt.getDuration ? yt.getDuration() : 0) : audio.duration;
+  const d =
+    mode === "yt"
+      ? yt && yt.getDuration
+        ? yt.getDuration()
+        : 0
+      : audio.duration;
   if (!d) return;
   const sec = (pct / 100) * d;
-  if (mode === 'yt') { try { yt.seekTo(sec, true); } catch (e) {} }
-  else audio.currentTime = sec;
+  if (mode === "yt") {
+    try {
+      yt.seekTo(sec, true);
+    } catch (e) {}
+  } else audio.currentTime = sec;
   setSeek(pct, pct);
 }
-els.seek.addEventListener('pointerdown', (e) => {
+els.seek.addEventListener("pointerdown", (e) => {
   els.seek.setPointerCapture(e.pointerId);
   scrubTo(seekFromEvent(e) * 100);
 });
-els.seek.addEventListener('pointermove', (e) => {
+els.seek.addEventListener("pointermove", (e) => {
   if (!e.buttons) return;
   scrubTo(seekFromEvent(e) * 100);
 });
-els.seek.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowRight') scrubTo(parseFloat(els.seek.getAttribute('aria-valuenow')) + 5);
-  if (e.key === 'ArrowLeft') scrubTo(parseFloat(els.seek.getAttribute('aria-valuenow')) - 5);
+els.seek.addEventListener("keydown", (e) => {
+  if (e.key === "ArrowRight")
+    scrubTo(parseFloat(els.seek.getAttribute("aria-valuenow")) + 5);
+  if (e.key === "ArrowLeft")
+    scrubTo(parseFloat(els.seek.getAttribute("aria-valuenow")) - 5);
 });
 
 /* ---------------------------------------------------------
@@ -374,20 +455,27 @@ els.seek.addEventListener('keydown', (e) => {
    --------------------------------------------------------- */
 function setVolume(v) {
   state.volume = Math.min(1, Math.max(0, v));
-  if (mode === 'yt' && yt && ytReady) {
-    try { yt.setVolume(Math.round(state.volume * 100)); if (state.muted) yt.mute(); else yt.unMute(); } catch (e) {}
+  if (mode === "yt" && yt && ytReady) {
+    try {
+      yt.setVolume(Math.round(state.volume * 100));
+      if (state.muted) yt.mute();
+      else yt.unMute();
+    } catch (e) {}
   } else {
     audio.volume = state.muted ? 0 : state.volume;
   }
 }
 function toggleMute() {
   state.muted = !state.muted;
-  if (mode === 'yt' && yt && ytReady) {
-    try { if (state.muted) yt.mute(); else yt.unMute(); } catch (e) {}
+  if (mode === "yt" && yt && ytReady) {
+    try {
+      if (state.muted) yt.mute();
+      else yt.unMute();
+    } catch (e) {}
   } else {
     audio.volume = state.muted ? 0 : state.volume;
   }
-  toast(state.muted ? '🔇 Aawaz band' : '🔊 Aawaz wapas');
+  toast(state.muted ? "🔇 Aawaz band" : "🔊 Aawaz wapas");
 }
 // Volume UI controls removed — keeping internal volume state only
 setVolume(0.7);
@@ -396,16 +484,16 @@ setVolume(0.7);
    9. Horn rail — "लहर लहर ओके प्लीज़"
    --------------------------------------------------------- */
 function blare(btn) {
-  btn.classList.remove('is-blaring');
-  void btn.offsetWidth;   // animation restart
-  btn.classList.add('is-blaring');
+  btn.classList.remove("is-blaring");
+  void btn.offsetWidth; // animation restart
+  btn.classList.add("is-blaring");
 }
-els.horn.addEventListener('click', () => {
+els.horn.addEventListener("click", () => {
   soundGhungroo();
   blare(els.horn);
-  els.logo.classList.remove('is-shaking');
+  els.logo.classList.remove("is-shaking");
   void els.logo.offsetWidth;
-  els.logo.classList.add('is-shaking');
+  els.logo.classList.add("is-shaking");
 });
 
 /* ---------------------------------------------------------
@@ -421,11 +509,12 @@ function getCtx() {
     master = audioCtx.createGain();
     master.gain.value = 0.9;
     const comp = audioCtx.createDynamicsCompressor();
-    comp.threshold.value = -18; comp.ratio.value = 8;
+    comp.threshold.value = -18;
+    comp.ratio.value = 8;
     master.connect(comp);
     comp.connect(audioCtx.destination);
   }
-  if (audioCtx.state === 'suspended') audioCtx.resume();
+  if (audioCtx.state === "suspended") audioCtx.resume();
   return audioCtx;
 }
 
@@ -447,22 +536,29 @@ function soundGhungroo() {
     const g = ctx.createGain();
     g.gain.setValueAtTime(0.0001, t);
     g.gain.exponentialRampToValueAtTime(0.18 - Math.random() * 0.08, t + 0.006);
-    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.25 + Math.random() * 0.18);
+    g.gain.exponentialRampToValueAtTime(
+      0.0001,
+      t + 0.25 + Math.random() * 0.18,
+    );
     const osc = ctx.createOscillator();
-    osc.type = 'triangle';
+    osc.type = "triangle";
     osc.frequency.value = f;
-    osc.connect(g); g.connect(master);
-    osc.start(t); osc.stop(t + 0.5);
+    osc.connect(g);
+    g.connect(master);
+    osc.start(t);
+    osc.stop(t + 0.5);
     /* overtone — asli ghanti ki khanak */
     const g2 = ctx.createGain();
     g2.gain.setValueAtTime(0.0001, t);
     g2.gain.exponentialRampToValueAtTime(0.05, t + 0.006);
     g2.gain.exponentialRampToValueAtTime(0.0001, t + 0.15);
     const osc2 = ctx.createOscillator();
-    osc2.type = 'sine';
+    osc2.type = "sine";
     osc2.frequency.value = f * 2.03;
-    osc2.connect(g2); g2.connect(master);
-    osc2.start(t); osc2.stop(t + 0.3);
+    osc2.connect(g2);
+    g2.connect(master);
+    osc2.start(t);
+    osc2.stop(t + 0.3);
   }
 }
 
@@ -471,18 +567,23 @@ function soundHut() {
   const ctx = getCtx();
   const toot = (t, dur, base) => {
     const osc = ctx.createOscillator();
-    osc.type = 'sawtooth';
+    osc.type = "sawtooth";
     osc.frequency.setValueAtTime(base * 1.2, t);
     osc.frequency.exponentialRampToValueAtTime(base * 0.85, t + dur);
     const filt = ctx.createBiquadFilter();
-    filt.type = 'lowpass'; filt.frequency.value = 850; filt.Q.value = 2.5;
+    filt.type = "lowpass";
+    filt.frequency.value = 850;
+    filt.Q.value = 2.5;
     const g = ctx.createGain();
     g.gain.setValueAtTime(0.0001, t);
     g.gain.exponentialRampToValueAtTime(0.5, t + 0.035);
     g.gain.setValueAtTime(0.5, t + dur * 0.6);
     g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-    osc.connect(filt); filt.connect(g); g.connect(master);
-    osc.start(t); osc.stop(t + dur + 0.05);
+    osc.connect(filt);
+    filt.connect(g);
+    g.connect(master);
+    osc.start(t);
+    osc.stop(t + dur + 0.05);
   };
   toot(ctx.currentTime + 0.03, 0.32, 175);
   toot(ctx.currentTime + 0.48, 0.32, 215);
@@ -495,26 +596,32 @@ function soundKarr() {
     const src = ctx.createBufferSource();
     src.buffer = noiseBuffer(ctx, dur + 0.2);
     const bp = ctx.createBiquadFilter();
-    bp.type = 'bandpass'; bp.Q.value = 16;
+    bp.type = "bandpass";
+    bp.Q.value = 16;
     bp.frequency.setValueAtTime(fromHz, t);
     bp.frequency.exponentialRampToValueAtTime(toHz, t + dur);
     const g = ctx.createGain();
     g.gain.setValueAtTime(0.0001, t);
     g.gain.exponentialRampToValueAtTime(0.35, t + dur * 0.35);
     g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-    src.connect(bp); bp.connect(g); g.connect(master);
-    src.start(t); src.stop(t + dur + 0.1);
+    src.connect(bp);
+    bp.connect(g);
+    g.connect(master);
+    src.start(t);
+    src.stop(t + dur + 0.1);
     /* hawa ki saanse */
     const osc = ctx.createOscillator();
-    osc.type = 'sine';
+    osc.type = "sine";
     osc.frequency.setValueAtTime(120, t);
     osc.frequency.exponentialRampToValueAtTime(55, t + 0.12);
     const g2 = ctx.createGain();
     g2.gain.setValueAtTime(0.0001, t);
     g2.gain.exponentialRampToValueAtTime(0.3, t + 0.01);
     g2.gain.exponentialRampToValueAtTime(0.0001, t + 0.15);
-    osc.connect(g2); g2.connect(master);
-    osc.start(t); osc.stop(t + 0.2);
+    osc.connect(g2);
+    g2.connect(master);
+    osc.start(t);
+    osc.stop(t + 0.2);
   };
   creak(ctx.currentTime + 0.05, 620, 150, 0.35);
   creak(ctx.currentTime + 0.5, 540, 130, 0.45);
@@ -527,30 +634,34 @@ function soundKarr() {
    --------------------------------------------------------- */
 function buildList() {
   TRACKS.forEach((song, i) => {
-    const li = document.createElement('li');
-    const btn = document.createElement('button');
-    btn.type = 'button';
+    const li = document.createElement("li");
+    const btn = document.createElement("button");
+    btn.type = "button";
 
-    const t = document.createElement('span');
-    t.className = 't-title';
+    const t = document.createElement("span");
+    t.className = "t-title";
     t.textContent = song.title;
 
-    const a = document.createElement('span');
-    a.className = 't-artist';
+    const a = document.createElement("span");
+    a.className = "t-artist";
     a.textContent = song.artist;
 
-    const d = document.createElement('span');
-    d.className = 't-dur';   // styling CSS mein hai (.t-dur)
-    d.textContent = '—';
+    const d = document.createElement("span");
+    d.className = "t-dur"; // styling CSS mein hai (.t-dur)
+    d.textContent = "—";
 
     btn.append(t, a, d);
     li.appendChild(btn);
     li.dataset.index = i;
-    btn.addEventListener('click', () => {
-      if (i === state.current) { togglePlay(); }
-      else { loadSong(i); playSong(); }
-      els.list.classList.remove('is-open');
-      els.listBtn.setAttribute('aria-expanded', 'false');
+    btn.addEventListener("click", () => {
+      if (i === state.current) {
+        togglePlay();
+      } else {
+        loadSong(i);
+        playSong();
+      }
+      els.list.classList.remove("is-open");
+      els.listBtn.setAttribute("aria-expanded", "false");
     });
     els.listItems.appendChild(li);
   });
@@ -559,41 +670,48 @@ function buildList() {
 function updateListUI() {
   const items = els.listItems.children;
   for (let i = 0; i < items.length; i++) {
-    items[i].classList.toggle('is-current', i === state.current);
+    items[i].classList.toggle("is-current", i === state.current);
   }
 }
 
 /* playlist toggle */
-els.listBtn.addEventListener('click', () => {
-  const open = els.list.classList.toggle('is-open');
-  els.listBtn.setAttribute('aria-expanded', open);
+els.listBtn.addEventListener("click", () => {
+  const open = els.list.classList.toggle("is-open");
+  els.listBtn.setAttribute("aria-expanded", open);
 });
 /* playlist ke bahar click karo toh band */
-document.addEventListener('pointerdown', (e) => {
-  if (!els.list.contains(e.target) && e.target !== els.listBtn && !els.listBtn.contains(e.target)) {
-    els.list.classList.remove('is-open');
-    els.listBtn.setAttribute('aria-expanded', 'false');
+document.addEventListener("pointerdown", (e) => {
+  if (
+    !els.list.contains(e.target) &&
+    e.target !== els.listBtn &&
+    !els.listBtn.contains(e.target)
+  ) {
+    els.list.classList.remove("is-open");
+    els.listBtn.setAttribute("aria-expanded", "false");
   }
 });
 
 /* ---------------------------------------------------------
    12. Background — artwork crossfade (gaana badle pe)
    --------------------------------------------------------- */
-const bgLayers = document.querySelectorAll('.bg__layer');
+const bgLayers = document.querySelectorAll(".bg__layer");
 let bgIdx = 0;
 let bgInit = true;
 function rotateBg() {
-  if (bgInit) { bgInit = false; return; }  // pehli baar (load pe) crossfade mat karo
+  if (bgInit) {
+    bgInit = false;
+    return;
+  } // pehli baar (load pe) crossfade mat karo
   bgIdx = (bgIdx + 1) % bgLayers.length;
-  bgLayers.forEach((l, i) => l.classList.toggle('is-active', i === bgIdx));
+  bgLayers.forEach((l, i) => l.classList.toggle("is-active", i === bgIdx));
 }
 
 /* ---------------------------------------------------------
    13. Intro / loading screen
    --------------------------------------------------------- */
 function hideIntro() {
-  els.intro.classList.add('hide');
-  els.intro.setAttribute('aria-hidden', 'true');
+  els.intro.classList.add("hide");
+  els.intro.setAttribute("aria-hidden", "true");
   els.intro.inert = true;
   els.play.focus({ preventScroll: true });
 }
@@ -606,11 +724,14 @@ function enterSite() {
     setTitle(TRACKS[state.current].title);
     els.artist.textContent = TRACKS[state.current].artist;
   }
-  playSong();
 }
-els.introEnter.addEventListener('click', enterSite);
+els.introEnter.addEventListener("click", enterSite);
 
-const bootMsgs = ['Naav khul rahi hai...', 'पतवार संभाल रहे हैं...', 'समुंदर में उतरने वाले हैं...'];
+const bootMsgs = [
+  "Naav khul rahi hai...",
+  "पतवार संभाल रहे हैं...",
+  "समुंदर में उतरने वाले हैं...",
+];
 let bootIdx = 0;
 const bootTimer = setInterval(() => {
   bootIdx = (bootIdx + 1) % bootMsgs.length;
@@ -619,13 +740,15 @@ const bootTimer = setInterval(() => {
 
 setTimeout(() => {
   clearInterval(bootTimer);
-  if (!els.intro.classList.contains('hide')) enterSite();
+  if (!els.intro.classList.contains("hide")) enterSite();
 }, 500);
 
 /* ---------------------------------------------------------
    14. Bumper rotation + init
    --------------------------------------------------------- */
-els.bumperNext.addEventListener('click', () => { nextBumper(); });
+els.bumperNext.addEventListener("click", () => {
+  nextBumper();
+});
 setInterval(nextBumper, 7000);
 
 /* ---------------------------------------------------------
@@ -642,27 +765,47 @@ async function fetchPlaylistFromAPI() {
   const pl = extractPlaylistId(CONFIG.YT_PLAYLIST_ID);
   if (!key || !pl) return null;
   const out = [];
-  let pageToken = '';
+  let pageToken = "";
   try {
     do {
-      const url = 'https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId='
-        + pl + '&key=' + key + (pageToken ? '&pageToken=' + pageToken : '');
+      const url =
+        "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=" +
+        pl +
+        "&key=" +
+        key +
+        (pageToken ? "&pageToken=" + pageToken : "");
       const res = await fetch(url);
       if (!res.ok) return null;
       const data = await res.json();
       for (const item of data.items || []) {
         const s = item.snippet || {};
-        if (s.resourceId && s.resourceId.kind === 'youtube#video' && s.title && !/private video|deleted video/i.test(s.title)) {
+        if (
+          s.resourceId &&
+          s.resourceId.kind === "youtube#video" &&
+          s.title &&
+          !/private video|deleted video/i.test(s.title)
+        ) {
           out.push({
-            title: s.title.replace(/\s*[-–—|]\s*(Official\s*)?(Video|Lyrics|Audio|Full\s*Song).*$/i, '').trim() || s.title,
-            artist: (s.videoOwnerChannelTitle || '').replace(/\s*-\s*Topic$/, ''),
-            videoId: s.resourceId.videoId
+            title:
+              s.title
+                .replace(
+                  /\s*[-–—|]\s*(Official\s*)?(Video|Lyrics|Audio|Full\s*Song).*$/i,
+                  "",
+                )
+                .trim() || s.title,
+            artist: (s.videoOwnerChannelTitle || "").replace(
+              /\s*-\s*Topic$/,
+              "",
+            ),
+            videoId: s.resourceId.videoId,
           });
         }
       }
-      pageToken = data.nextPageToken || '';
+      pageToken = data.nextPageToken || "";
     } while (pageToken && out.length < 200);
-  } catch (e) { return null; }
+  } catch (e) {
+    return null;
+  }
   return out.length ? out : null;
 }
 
@@ -671,38 +814,53 @@ async function initSource() {
   const fromAPI = await fetchPlaylistFromAPI();
   if (fromAPI) {
     TRACKS = fromAPI;
-    mode = 'yt';
+    mode = "yt";
     loadYTAPI();
     return;
   }
   try {
-    const res = await fetch('tracks.json');
+    const res = await fetch("tracks.json");
     const t = await res.json();
     if (Array.isArray(t) && t.length && t[0].videoId) {
       TRACKS = t;
-      mode = 'yt';
+      mode = "yt";
       loadYTAPI();
       return;
     }
-  } catch (e) { /* tracks.json nahi hai — koi baat */ }
-  TRACKS = SONGS.map((s) => ({ title: s.title, artist: s.movie, file: s.file }));
-  mode = 'local';
+  } catch (e) {
+    /* tracks.json nahi hai — koi baat */
+  }
+  TRACKS = SONGS.map((s) => ({
+    title: s.title,
+    artist: s.movie,
+    file: s.file,
+  }));
+  mode = "local";
 }
 
 /* YouTube IFrame API load */
 function loadYTAPI() {
-  if (window.YT && window.YT.Player) { window.onYouTubeIframeAPIReady(); return; }
-  const s = document.createElement('script');
-  s.src = 'https://www.youtube.com/iframe_api';
+  if (window.YT && window.YT.Player) {
+    window.onYouTubeIframeAPIReady();
+    return;
+  }
+  const s = document.createElement("script");
+  s.src = "https://www.youtube.com/iframe_api";
   s.async = true;
   document.head.append(s);
 }
 
 window.onYouTubeIframeAPIReady = () => {
-  yt = new YT.Player('yt-player', {
-    height: '1',
-    width: '1',
-    playerVars: { playsinline: 1, controls: 0, disablekb: 1, modestbranding: 1, rel: 0 },
+  yt = new YT.Player("yt-player", {
+    height: "1",
+    width: "1",
+    playerVars: {
+      playsinline: 1,
+      controls: 0,
+      disablekb: 1,
+      modestbranding: 1,
+      rel: 0,
+    },
     events: {
       onReady: () => {
         ytReady = true;
@@ -711,24 +869,42 @@ window.onYouTubeIframeAPIReady = () => {
               sirf audio element pe lagta tha — YT pe nahi).
            2. Agar ready hone se pehle play dabaya tha toh ab chala do. */
         setVolume(state.volume);
-        if (ytPendingPlay) { ytPendingPlay = false; playSong(); }
+        if (ytPendingPlay) {
+          ytPendingPlay = false;
+          playSong();
+        }
       },
       onStateChange: (e) => {
         const S = YT.PlayerState;
-        if (e.data === S.ENDED) { state.playing = false; setUIPlaying(false); flashBumper(MSGS.pause, 1800); }
-        else if (e.data === S.PLAYING) { state.playing = true; setUIPlaying(true); updateListUI(); }
+        if (e.data === S.ENDED) {
+          state.playing = false;
+          setUIPlaying(false);
+          flashBumper(MSGS.pause, 1800);
+        } else if (e.data === S.PLAYING) {
+          state.playing = true;
+          setUIPlaying(true);
+          updateListUI();
+        }
       },
       onError: () => {
-        toast('🎥 Video available nahi — agla chalao ▶');
+        toast("🎥 Video available nahi — agla chalao ▶");
         if (state.playing) nextSong();
-      }
-    }
+      },
+    },
   });
   /* YouTube API currentTime baar-baar nahi batata — khud poll karo.
      Tab hidden ho toh skip (battery bachti hai) aur jab tak nayi
      video load na ho tab tak purani video ka time mat dikhao. */
   setInterval(() => {
-    if (document.hidden || mode !== 'yt' || !ytReady || !state.playing || !yt || !ytLoadedId) return;
+    if (
+      document.hidden ||
+      mode !== "yt" ||
+      !ytReady ||
+      !state.playing ||
+      !yt ||
+      !ytLoadedId
+    )
+      return;
     try {
       const d = yt.getDuration ? yt.getDuration() : 0;
       const c = yt.getCurrentTime ? yt.getCurrentTime() : 0;
@@ -738,9 +914,11 @@ window.onYouTubeIframeAPIReady = () => {
         els.tCur.textContent = fmtTime(c);
         els.tDur.textContent = fmtTime(d);
         const item = els.listItems.children[state.current];
-        if (item) item.querySelector('.t-dur').textContent = fmtTime(d);
+        if (item) item.querySelector(".t-dur").textContent = fmtTime(d);
       }
-    } catch (err) { /* player abhi ready nahi */ }
+    } catch (err) {
+      /* player abhi ready nahi */
+    }
   }, 250);
 };
 
@@ -750,7 +928,7 @@ window.onYouTubeIframeAPIReady = () => {
   buildList();
   // Har refresh pe random song se start karo
   const randomStart = Math.floor(Math.random() * TRACKS.length);
-  setTitle('Baitho, naav load ho rahi hai…');
+  setTitle("Baitho, naav load ho rahi hai…");
   loadSong(randomStart);
   updateListUI();
 })();
