@@ -606,6 +606,7 @@ function enterSite() {
     setTitle(TRACKS[state.current].title);
     els.artist.textContent = TRACKS[state.current].artist;
   }
+  playSong();
 }
 els.introEnter.addEventListener('click', enterSite);
 
