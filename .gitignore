@@ -1,0 +1,9 @@
+# Environment variables — API keys yahan hain, kabhi commit mat karo
+.env
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>KaunDishaMein — Vishal samudra koi disha nahi | Chappu Chalaiye</title>
+
+  <!-- SEO / description -->
+  <meta name="description" content="Do Musafir — do yaar ek naav mein, samundar ke beech gaana bajaa rahe hain. Lahron ki awaz, namak ki hawa, aur 90s ke gehre gaane. Lahar OK Please.">
+  <meta name="theme-color" content="#0a1416">
+
+  <!-- OG meta tags (WhatsApp / Instagram share preview) -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://domusafir.xyz/">
+  <meta property="og:title" content="Do Musafir ⚓ — samundar ke gaane | Lahar OK Please">
+  <meta property="og:description" content="Do yaar, ek naav, aur samundar bhar ke gaane. Gaana daalo, lahar aane do.">
+  <meta property="og:image" content="https://domusafir.xyz/assets/images/og-cover.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Do Musafir — samundar, naav aur doobta suraj">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Do Musafir ⚓ — samundar ke gaane | Lahar OK Please">
+  <meta name="twitter:description" content="Do yaar, ek naav, aur samundar bhar ke gaane.">
+  <meta name="twitter:image" content="https://domusafir.xyz/assets/images/og-cover.png">
+
+  <!-- favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚓</text></svg>">
+
+  <!-- Google Fonts: Baloo 2 (Devanagari + Latin) aur Yatra One (truck lettering) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Yatra+One&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ============ INTRO / LOADING SCREEN ============ -->
+  <div class="intro" id="intro" role="dialog" aria-label="Namaste! Intro screen">
+    <div class="intro__wheel" aria-hidden="true">
+      <svg viewBox="0 0 200 200">
+        <!-- Anchor / naav ka chakra -->
+        <circle cx="100" cy="100" r="86" fill="#1a3a5c" stroke="#0e2340" stroke-width="6"/>
+        <circle cx="100" cy="100" r="78" fill="none" stroke="#2a5a8c" stroke-width="5"/>
+        <!-- Anchor shape -->
+        <line x1="100" y1="32" x2="100" y2="168" stroke="#4a9fd4" stroke-width="8" stroke-linecap="round"/>
+        <line x1="60" y1="60" x2="140" y2="60" stroke="#4a9fd4" stroke-width="7" stroke-linecap="round"/>
+        <path d="M68 150 Q100 172 132 150" fill="none" stroke="#4a9fd4" stroke-width="7" stroke-linecap="round"/>
+        <circle cx="100" cy="60" r="10" fill="none" stroke="#4a9fd4" stroke-width="6"/>
+        <!-- waves -->
+        <path d="M40 110 Q55 100 70 110 Q85 120 100 110 Q115 100 130 110 Q145 120 160 110" fill="none" stroke="#7ec8e3" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="100" cy="100" r="5" fill="#7ec8e3"/>
+      </svg>
+    </div>
+    <p class="intro__curse">"डूबोगे नहीं तो पाओगे कैसे?"</p>
+    <p class="intro__sub">Lahar aane do, naav chalti rahegi... ⚓</p>
+    <p class="intro__loading" id="introLoading">Kasti hmari aa rahi hai...</p>
+    <button class="intro__btn" id="introEnter" type="button">▶ Dubki lagyiho samundar ma</button>
+  </div>
+
+  <!-- ============ BACKGROUND — layered artwork, playlist ke saath crossfade ============ -->
+  <div class="bg" aria-hidden="true">
+    <div class="bg__layer bg__layer--1 is-active"></div>
+    <div class="bg__layer bg__layer--2"></div>
+    <div class="bg__scrim"></div>
+  </div>
+
+  <!-- Hidden YouTube iframe — asli sound source (YouTube mode mein). -->
+  <div class="yt-host" aria-hidden="true"><div id="yt-player"></div></div>
+
+  <!-- ============ TOP BAR: clock • presence • link ============ -->
+  <header class="topbar">
+    <div class="clock" id="clock" aria-label="Current time"></div>
+
+    <div class="presence" aria-live="polite">
+      <span class="presence__dot" aria-hidden="true"></span>
+      <span class="presence__count" id="listeners">42</span>
+      <span class="presence__label">Safar par</span>
+    </div>
+
+    <nav class="links" aria-label="Aur gaane">
+      <a class="link" id="linkYt" href="https://music.youtube.com/playlist?list=PLJa3xCLt0F-w&si=fx8w9RFewWiU2Hh3" target="_blank" rel="noopener noreferrer" aria-label="YouTube pe samundar ke gaane" title="YouTube pe samundar ke gaane">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+          <path d="M12 0C5.376 0 0 5.376 0 12s5.376 12 12 12 12-5.376 12-12S18.624 0 12 0zm0 19.104c-3.924 0-7.104-3.18-7.104-7.104S8.076 4.896 12 4.896s7.104 3.18 7.104 7.104-3.18 7.104-7.104 7.104zm0-13.332c-3.432 0-6.228 2.796-6.228 6.228S8.568 18.228 12 18.228s6.228-2.796 6.228-6.228S15.432 5.772 12 5.772zM9.684 15.54V8.46L15.816 12l-6.132 3.54z"/>
+        </svg>
+      </a>
+    </nav>
+  </header>
+
+  <!-- ============ HORN RAIL — naav ki ghanti: LAHAR LAHAR! ============ -->
+  <aside class="horns">
+    <button class="horn" id="horn" type="button" aria-label="Lahar bajao">
+      <span class="horn__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+          <path fill="currentColor" d="M12 3a7 7 0 00-7 7v3.5L3.5 17h17L19 13.5V10a7 7 0 00-7-7z"/>
+          <path fill="currentColor" d="M10 19a2 2 0 004 0"/>
+        </svg>
+      </span>
+      <span class="horn__text">
+        <span class="horn__deva" lang="hi">लहर ओके प्लीज़</span>
+        <span class="horn__en">Lahar lahar pleaseeee</span>
+      </span>
+    </button>
+  </aside>
+
+  <main>
+    <!-- ============ WORDMARK ============ -->
+    <h1 class="logo" id="logo" lang="hi">
+      <span class="logo__line">दो</span>
+      <span class="logo__line">मुसाफ़िर</span>
+      <!-- crawlers/screen readers ke liye Latin naam -->
+      <span class="sr-only" lang="en">Do Musafir — Lahar OK Please</span>
+    </h1>
+
+<!-- ============ DOCK ============ -->
+    <div class="dock">
+
+      <!-- playlist popup (dock ke upar slide hota hai) -->
+      <section class="list" id="list" aria-label="Playlist">
+        <ol id="listItems"></ol>
+      </section>
+
+      <!-- bumper: samundar ke slogans (Yatra One) -->
+      <p class="bumper">
+        <span class="bumper__text" id="bumperText" lang="hi" aria-live="polite">जो डूबे सो पार उतरे</span>
+        <button class="bumper__next" id="bumperNext" type="button" aria-label="Aur line">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M20 11.5A8 8 0 106.3 17.7"/><path d="M20 5.5v6h-6"/>
+          </svg>
+        </button>
+      </p>
+
+      <!-- player pill -->
+      <section class="player" id="player" aria-label="Player">
+        <!-- ghoomta naav ka chakra / compass -->
+        <div class="disc" id="disc">
+          <div class="disc__ring">
+            <span class="disc__placeholder" aria-hidden="true"></span>
+          </div>
+          <span class="disc__hub" aria-hidden="true"></span>
+        </div>
+
+        <div class="meta">
+          <!-- title + artist in one row -->
+          <div class="meta__header">
+            <div class="meta__title" id="title" role="status" aria-live="polite">
+              <span class="mq-wrap" id="mqWrap">
+                <span class="mq"><span id="titleText">Baitho, naav load ho rahi hai…</span></span>
+                <span class="mq" aria-hidden="true"><span id="titleClone">Baitho, naav load ho rahi hai…</span></span>
+              </span>
+            </div>
+            <p class="meta__artist" id="artist">&nbsp;</p>
+          </div>
+
+          <!-- seek + time -->
+          <div class="meta__seekrow">
+            <div class="seek" id="seek" role="slider" tabindex="0" aria-label="Seek" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+              <div class="seek__rail"><div class="seek__fill" id="seekFill"></div></div>
+              <div class="seek__knob" id="seekKnob"></div>
+            </div>
+            <div class="time"><span id="tCur">0:00</span> / <span id="tDur">0:00</span></div>
+          </div>
+        </div>
+
+        <!-- controls on right -->
+        <div class="controls">
+          <button id="shuffle" type="button" class="btn btn--toggle" aria-label="Shuffle" aria-pressed="false">
+            <svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true">
+              <path d="M17 3l4 4-4 4V8h-2.2l-2.3 3.1 2.3 3.1H17V11l4 4-4 4v-3h-3.2l-2.6-3.5L8.6 15H3v-2h4.6l2.6-3.5L12.8 6H17V3zM3 9h3.4l1.5 2H3V9z"/>
+            </svg>
+          </button>
+          <button id="prev" type="button" class="btn" aria-label="Pichhla gaana">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+              <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
+            </svg>
+          </button>
+          <button id="play" type="button" class="btn btn--play" aria-label="Play">
+            <svg class="i-play" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+            <svg class="i-pause" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+              <path d="M6 5h4v14H6zm8 0h4v14h-4z"/>
+            </svg>
+          </button>
+          <button id="next" type="button" class="btn" aria-label="Agla gaana">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+              <path d="M16 6h2v12h-2zm-2 6L5.5 6v12z"/>
+            </svg>
+          </button>
+          <button id="listBtn" type="button" class="btn btn--toggle" aria-label="Playlist" aria-expanded="false" aria-controls="list">
+            <svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true">
+              <path d="M3 6h13v2H3zm0 5h13v2H3zm0 5h9v2H3zm15-6.5l4 3-4 3z"/>
+            </svg>
+          </button>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- footer credit — fixed to bottom of screen -->
+  <p class="footer">Made with ❤️ for the two travelers — lahar aane do ⚓ , kashti chalao ⛵</p>
+
+  <!-- toast -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
