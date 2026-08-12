@@ -267,7 +267,7 @@ function loadSong(i) {
     audio.src = "assets/audio/" + song.file;
   }
   updateListUI();
-  rotateBg(); // artwork crossfade
+  // rotateBg(); // artwork crossfade
 }
 
 function playSong() {
